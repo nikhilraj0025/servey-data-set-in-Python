@@ -1,0 +1,163 @@
+import pandas as pd
+
+survey=pd.read_csv(r"C:\Users\AKHIL\Desktop\R csv\servey.csv")
+
+survey.head()
+
+sur=survey.dropna()
+
+# sur.set_option('display.max_columns', None)
+
+sur.columns=sur.columns.str.strip()
+
+ 
+
+##renaming the column
+sur=sur.rename(columns={sur.columns[14]:"income"})
+sur=sur.rename(columns={sur.columns[5]:"mrstatus"})
+
+sur=sur.rename(columns={sur.columns[10]:"capgain"})
+
+sur=sur.rename(columns={sur.columns[11]:"capitalloss"})
+
+sur=sur.rename(columns={sur.columns[12]:"hoursweek"})
+
+sur=sur.rename(columns={sur.columns[13]:"nativecountry"})
+
+sur=sur.rename(columns={sur.columns[4]:"educationnum"})
+
+sur
+
+# survey.head()
+
+# sur = sur.reset_index()
+
+ 
+
+ #s_y=sur.iloc[:,-1]
+
+# su_y.head
+
+#s_x=sur.loc[:,["age","workclass","fnlwgt","education","educationnum","mrstatus","occupation","relationship","race","sex",
+
+ #                "capgain","capitalloss","hoursweek","nativecountry"]]
+
+#s_x.head(10)
+
+# s_y.head()
+
+ 
+
+ 
+from sklearn.preprocessing import LabelEncoder
+
+sur
+
+ 
+
+sur=sur.apply(LabelEncoder().fit_transform)
+
+sur.head()
+
+ 
+
+ 
+
+ 
+
+s_y=sur.iloc[:,-1]
+
+# su_y.head
+
+s_x=sur.loc[:,["age","workclass","fnlwgt","education","educationnum","mrstatus","occupation","relationship","race","sex",
+
+                 "capgain","capitalloss","hoursweek","nativecountry"]]
+
+s_x.head(10)
+
+# s_y.head()
+
+ 
+
+ ##### NAIVE BAYES ###################################
+
+from sklearn.model_selection import train_test_split
+
+s_x_train,s_x_test,s_y_train,s_y_test=train_test_split(s_x,s_y,test_size=.2,random_state=501)
+from sklearn.naive_bayes import MultinomialNB
+
+# or GuassionNB
+
+nb=MultinomialNB()
+nb.fit(s_x_train,s_y_train)
+pred=nb.predict(s_x_test)
+from sklearn.metrics import confusion_matrix
+print(confusion_matrix(pred,s_y_test))
+tab1=confusion_matrix(pred,s_y_test)
+print("Accuracy- ",sum(tab1.diagonal()/tab1.sum()))##accuracy
+
+
+
+
+
+####### LOGISTIC ###################################
+import sklearn
+from sklearn.model_selection import train_test_split
+s_x_train,s_x_test,s_y_train,s_y_test=train_test_split(s_x,s_y,test_size=.2,random_state=101)
+
+from sklearn.linear_model import LogisticRegression ################ next create instance #############
+logmodel=LogisticRegression() ############## creating the instance of the Logistic Regression
+logmodel.fit(s_x_train,s_y_train) ######### fit is used for training the model ##############
+pred_value=logmodel.predict(s_x_test)
+#print(logmodel.predict_proba(s_x_test))### for finding accuracy of confusion matrix ##########
+print(pred_value)
+from sklearn.metrics import confusion_matrix
+tab1 = confusion_matrix(pred_value,s_y_test)
+print("Accuracy- ",sum(tab1.diagonal()/tab1.sum()))##accuracy
+
+
+
+
+########################DECISION TREE#######################################
+import sklearn
+from sklearn.model_selection import train_test_split
+s_x_train,s_x_test,s_y_train,s_y_test=train_test_split(s_x,s_y,test_size=.2,random_state=501)
+
+from sklearn.tree import DecisionTreeClassifier
+dtree=DecisionTreeClassifier(min_samples_split=100)
+dtree.fit(s_x_train,s_y_train)
+pred_value1=dtree.predict(s_x_test)
+
+from sklearn.metrics import confusion_matrix
+co = confusion_matrix(pred_value1,s_y_test)
+co
+
+tab1=confusion_matrix(pred_value1,s_y_test)
+tab1
+
+accuracy=sum(tab1.diagonal())/tab1.sum()#####  to get the accuracy  ######################## 
+print("accuracy of the model is ::",accuracy)
+
+
+
+
+###### RANDOM FOREST #####################################
+import sklearn
+from sklearn.model_selection import train_test_split
+s_x_train,s_x_test,s_y_train,s_y_test=train_test_split(s_x,s_y,test_size=.2,random_state=501)
+
+from sklearn.ensemble import RandomForestClassifier
+random1=RandomForestClassifier(100)
+random1.fit(s_x_train,s_y_train)
+pred_value12=random1.predict(s_x_test)
+
+from sklearn.metrics import confusion_matrix
+com = confusion_matrix(pred_value12,s_y_test)
+com
+
+tab11=confusion_matrix(pred_value12,s_y_test)
+tab11
+
+accuracy=sum(tab11.diagonal())/tab11.sum()#####  to get the accuracy  ######################## 
+print("accuracy of the model is ::",accuracy)
+random1.feature_importances_
